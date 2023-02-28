@@ -1,0 +1,512 @@
+y1 <- prediction(0.1, 0.1, 13)
+prediction <- function (b, k, days, data = x){
+b <- 0.5
+k <- 0.5
+y <- data[1, c("time", "susceptible", "infectious", "removed")]
+for (i in 1:10) {
+t <- y[1,"time"] + 1
+s <- y[1, "susceptible"] - (b*y[1, "susceptible"]*y[1, "infectious"])
+r <- y[1, "removed"] + (k*y[1, "infectious"])
+i <- y[1, "infectious"] + (b*y[1, "susceptible"]*y[1, "infectious"]) - (k*y[1, "infectious"])
+new <- data.frame(
+time = t,
+susceptible = s,
+infectious = i,
+removed = r
+)
+y <- rbind (new, y)
+}
+return (y)
+}
+prediction ()
+y1 <- prediction(0.1, 0.1, 13)
+y1
+y1 <- prediction(x[1, "b"], x[1, "k"], 13)
+y2 <- prediction(median(x$b), median(x$k), 13)
+y3 <- prediction(x[1, "b"]*0.9, x[1, "k"]*1.1, 13)
+plot(x$time, x$infectious, type = "l", col = "red", xlim = c(0, 200), ylim = c(0, 0.01))
+lines(y1$time, y1$infectious, type = "l", col = "red", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "red", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "green", lty = 4)
+plot(x$time, x$infectious, type = "l", col = "red", xlim = c(0, 200), ylim = c(0, 0.01))
+y1 <- prediction(x[1, "b"], x[1, "k"], 13)
+y2 <- prediction(median(x$b), median(x$k), 13)
+y3 <- prediction(x[1, "b"]*0.9, x[1, "k"]*1.1, 13)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.01))
+lines(y1$time, y1$infectious, type = "l", col = "red", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "green", lty = 4)
+y2 <- prediction(median(x$b), median(x$k), 13)
+y2 <- prediction(median(x$b), median(x$k), 13)
+y1 <- prediction(x[1, "b"], x[1, "k"], 13)
+y2 <- prediction(median(x$b), median(x$k), 13)
+y3 <- prediction(x[1, "b"]*0.9, x[1, "k"]*1.1, 13)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.01))
+lines(y1$time, y1$infectious, type = "l", col = "red", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "green", lty = 4)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+covid <- read.csv("covid.csv")
+head (covid)
+covid[is.na(covid$death), "death"] <- 0
+covid[is.na(covid$recovered), "recovered"] <- 0
+covid$time <- seq(nrow(covid), 1, -1)
+N <- 310*10^6
+covid$susceptible <- (N - covid$positive) / N
+covid$removed <- (covid$recovered + covid$death) / N
+covid$infectious <- (covid$positive - covid$removed) / N
+x <- covid[, c("time", "susceptible", "removed", "infectious")]
+plot(x$time, x$infectious, type = "l")
+x [row, columns]
+x$ds <- x[,"susceptible"] - c(x[-1,"susceptible"], 1)
+x$dr <- x[,"removed"] - c(x[-1,"removed"], 0)
+x$di <- x[,"infectious"] - c(x[-1,"infectious"], 0)
+#b/k = R0
+x$k <- x$dr / x$infectious
+x$b <- x$ds /(- x$susceptible * x$infectious)
+prediction <- function (b, k, days, data = x){
+b <- 0.5
+k <- 0.5
+y <- data[1, c("time", "susceptible", "infectious", "removed")]
+for (i in 1:10) {
+t <- y[1,"time"] + 1
+s <- y[1, "susceptible"] - (b*y[1, "susceptible"]*y[1, "infectious"])
+r <- y[1, "removed"] + (k*y[1, "infectious"])
+i <- y[1, "infectious"] + (b*y[1, "susceptible"]*y[1, "infectious"]) - (k*y[1, "infectious"])
+new <- data.frame(
+time = t,
+susceptible = s,
+infectious = i,
+removed = r
+)
+y <- rbind (new, y)
+}
+return (y)
+}
+prediction ()
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 13)
+y2 <- prediction(median(x$b), median(x$k), 13)
+y3 <- prediction(x[1, "b"]*0.9, x[1, "k"]*1.1, 13)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.01))
+lines(y1$time, y1$infectious, type = "l", col = "red", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "green", lty = 4)
+covid <- read.csv("covid.csv")
+head (covid)
+covid[is.na(covid$death), "death"] <- 0
+covid[is.na(covid$recovered), "recovered"] <- 0
+covid$time <- seq(nrow(covid), 1, -1)
+N <- 310*10^6
+covid$susceptible <- (N - covid$positive) / N
+covid$removed <- (covid$recovered + covid$death) / N
+covid$infectious <- (covid$positive - covid$death - covid$recovered) / N
+x <- covid[, c("time", "susceptible", "removed", "infectious")]
+plot(x$time, x$infectious, type = "l")
+x [row, columns]
+x$ds <- x[,"susceptible"] - c(x[-1,"susceptible"], 1)
+x$dr <- x[,"removed"] - c(x[-1,"removed"], 0)
+x$di <- x[,"infectious"] - c(x[-1,"infectious"], 0)
+#b/k = R0
+x$k <- x$dr / x$infectious
+x$b <- x$ds /(- x$susceptible * x$infectious)
+prediction <- function (b, k, days, data = x){
+b <- 0.5
+k <- 0.5
+y <- data[1, c("time", "susceptible", "infectious", "removed")]
+for (i in 1:10) {
+t <- y[1,"time"] + 1
+s <- y[1, "susceptible"] - (b*y[1, "susceptible"]*y[1, "infectious"])
+r <- y[1, "removed"] + (k*y[1, "infectious"])
+i <- y[1, "infectious"] + (b*y[1, "susceptible"]*y[1, "infectious"]) - (k*y[1, "infectious"])
+new <- data.frame(
+time = t,
+susceptible = s,
+infectious = i,
+removed = r
+)
+y <- rbind (new, y)
+}
+return (y)
+}
+prediction ()
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 13)
+y2 <- prediction(median(x$b), median(x$k), 13)
+y3 <- prediction(x[1, "b"]*0.9, x[1, "k"]*1.1, 13)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.01))
+lines(y1$time, y1$infectious, type = "l", col = "red", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "green", lty = 4)
+y2 <- prediction(median(x$b), median(x$k), 13)
+y1 <- prediction(x[1, "b"], x[1, "k"], 13)
+y2 <- prediction(median(x$b), median(x$k), 13)
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 13)
+y2 <- prediction(median(x$b), median(x$k), 13)
+##y3 <- prediction(x[1, "b"]*0.9, x[1, "k"]*1.1, 13)
+plot(x$time, x$infectious, type = "l", col = "red", xlim = c(0, 200), ylim = c(0, 0.010))
+lines(y1$time, y1$infectious, type = "l", col = "red", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "green", lty = 4)
+# Covid data
+covid <- read.csv("covid.csv")
+head (covid)
+covid[is.na(covid$death), "death"] <- 0
+covid[is.na(covid$recovered), "recovered"] <- 0
+covid$time <- seq(nrow(covid), 1, -1)
+N <- 310*10^6
+covid$susceptible <- (N - covid$positive) / N
+covid$removed <- (covid$recovered + covid$death) / N
+covid$infectious <- (covid$positive - covid$death - covid$recovered) / N
+x <- covid[, c("time", "susceptible", "removed", "infectious")]
+plot(x$time, x$infectious, type = "l")
+x [row, columns]
+x$ds <- x[,"susceptible"] - c(x[-1,"susceptible"], 1)
+x$dr <- x[,"removed"] - c(x[-1,"removed"], 0)
+x$di <- x[,"infectious"] - c(x[-1,"infectious"], 0)
+#b/k = R0
+x$k <- x$dr / x$infectious
+x$b <- x$ds /(- x$susceptible * x$infectious)
+prediction <- function (b, k, days, data = x){
+b <- 0.5
+k <- 0.5
+y <- data[1, c("time", "susceptible", "infectious", "removed")]
+for (i in 1:days) {
+t <- y[1,"time"] + 1
+s <- y[1, "susceptible"] - (b*y[1, "susceptible"]*y[1, "infectious"])
+r <- y[1, "removed"] + (k*y[1, "infectious"])
+i <- y[1, "infectious"] + (b*y[1, "susceptible"]*y[1, "infectious"]) - (k*y[1, "infectious"])
+new <- data.frame(
+time = t,
+susceptible = s,
+infectious = i,
+removed = r
+)
+y <- rbind (new, y)
+}
+return (y)
+}
+prediction ()
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 13)
+y2 <- prediction(median(x$b), median(x$k), 13)
+##y3 <- prediction(x[1, "b"]*0.9, x[1, "k"]*1.1, 13)
+plot(x$time, x$infectious, type = "l", col = "red", xlim = c(0, 200), ylim = c(0, 0.01))
+lines(y1$time, y1$infectious, type = "l", col = "red", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "green", lty = 4)
+covid <- read.csv("covid.csv")
+head (covid)
+covid[is.na(covid$death), "death"] <- 0
+covid[is.na(covid$recovered), "recovered"] <- 0
+covid$time <- seq(nrow(covid), 1, -1)
+N <- 310*10^6
+covid$susceptible <- (N - covid$positive) / N
+covid$removed <- (covid$recovered + covid$death) / N
+covid$infectious <- (covid$positive - covid$death - covid$recovered) / N
+x <- covid[, c("time", "susceptible", "removed", "infectious")]
+plot(x$time, x$infectious, type = "l")
+x [row, columns]
+x$ds <- x[,"susceptible"] - c(x[-1,"susceptible"], 1)
+x$dr <- x[,"removed"] - c(x[-1,"removed"], 0)
+x$di <- x[,"infectious"] - c(x[-1,"infectious"], 0)
+#b/k = R0
+x$k <- x$dr / x$infectious
+x$b <- x$ds /(- x$susceptible * x$infectious)
+prediction <- function (b, k, days){
+b <- 0.5
+k <- 0.5
+y <- data[1, c("time", "susceptible", "infectious", "removed")]
+for (i in 1:days) {
+t <- y[1,"time"] + 1
+s <- y[1, "susceptible"] - (b*y[1, "susceptible"]*y[1, "infectious"])
+r <- y[1, "removed"] + (k*y[1, "infectious"])
+i <- y[1, "infectious"] + (b*y[1, "susceptible"]*y[1, "infectious"]) - (k*y[1, "infectious"])
+new <- data.frame(
+time = t,
+susceptible = s,
+infectious = i,
+removed = r
+)
+y <- rbind (new, y)
+}
+return (y)
+}
+prediction ()
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 13)
+y2 <- prediction(median(x$b), median(x$k), 13)
+##y3 <- prediction(x[1, "b"]*0.9, x[1, "k"]*1.1, 13)
+plot(x$time, x$infectious, type = "l", col = "red", xlim = c(0, 200), ylim = c(0, 0.01))
+lines(y1$time, y1$infectious, type = "l", col = "red", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "green", lty = 4)
+covid <- read.csv("covid.csv")
+head (covid)
+covid[is.na(covid$death), "death"] <- 0
+covid[is.na(covid$recovered), "recovered"] <- 0
+covid$time <- seq(nrow(covid), 1, -1)
+N <- 310*10^6
+covid$susceptible <- (N - covid$positive) / N
+covid$removed <- (covid$recovered + covid$death) / N
+covid$infectious <- (covid$positive - covid$death - covid$recovered) / N
+x <- covid[, c("time", "susceptible", "removed", "infectious")]
+plot(x$time, x$infectious, type = "l")
+x [row, columns]
+x$ds <- x[,"susceptible"] - c(x[-1,"susceptible"], 1)
+x$dr <- x[,"removed"] - c(x[-1,"removed"], 0)
+x$di <- x[,"infectious"] - c(x[-1,"infectious"], 0)
+#b/k = R0
+x$k <- x$dr / x$infectious
+x$b <- x$ds /(- x$susceptible * x$infectious)
+prediction <- function (b, k, days, data = x){
+y <- data[1, c("time", "susceptible", "infectious", "removed")]
+for (i in 1:days) {
+t <- y[1,"time"] + 1
+s <- y[1, "susceptible"] - (b*y[1, "susceptible"]*y[1, "infectious"])
+r <- y[1, "removed"] + (k*y[1, "infectious"])
+i <- y[1, "infectious"] + (b*y[1, "susceptible"]*y[1, "infectious"]) - (k*y[1, "infectious"])
+new <- data.frame(
+time = t,
+susceptible = s,
+infectious = i,
+removed = r
+)
+y <- rbind (new, y)
+}
+return (y)
+}
+#prediction ()
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 13)
+y2 <- prediction(median(x$b), median(x$k), 13)
+##y3 <- prediction(x[1, "b"]*0.9, x[1, "k"]*1.1, 13)
+plot(x$time, x$infectious, type = "l", col = "red", xlim = c(0, 200), ylim = c(0, 0.01))
+lines(y1$time, y1$infectious, type = "l", col = "red", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "green", lty = 4)
+y1 <- prediction(x[1, "b"], x[1, "k"], 13)
+y2 <- prediction(median(x$b), median(x$k), 13)
+##y3 <- prediction(x[1, "b"]*0.9, x[1, "k"]*1.1, 13)
+plot(x$time, x$infectious, type = "l", col = "red", xlim = c(0, 200), ylim = c(0, 0.01))
+lines(y1$time, y1$infectious, type = "l", col = "red", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "green", lty = 4)
+#prediction ()
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 13)
+y2 <- prediction(median(x$b), median(x$k), 13)
+##y3 <- prediction(x[1, "b"]*0.9, x[1, "k"]*1.1, 13)
+plot(x$time, x$infectious, type = "l", col = "red", xlim = c(0, 200), ylim = c(0, 0.01))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#prediction ()
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 28)
+y2 <- prediction(median(x$b), median(x$k), 28)
+##y3 <- prediction(x[1, "b"]*0.9, x[1, "k"]*1.1, 13)
+plot(x$time, x$infectious, type = "l", col = "red", xlim = c(0, 200), ylim = c(0, 0.01))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "green", lty = 4)
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 28)
+y2 <- prediction(median(x$b), median(x$k), 28)
+##y3 <- prediction(x[1, "b"]*0.9, x[1, "k"]*1.1, 13)
+plot(x$time, x$infectious, type = "l", col = "red", xlim = c(0, 200), ylim = c(0, 0.016))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "green", lty = 4)
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 28)
+y2 <- prediction(median(x$b), median(x$k), 28)
+y3 <- prediction(x[1, "b"]*0.85, x[1, "k"]*0.967, 28)
+plot(x$time, x$infectious, type = "l", col = "red", xlim = c(0, 200), ylim = c(0, 0.016))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "green", lty = 4)
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 28)
+y2 <- prediction(median(x$b), median(x$k), 28)
+y3 <- prediction(x[1, "b"]*0.85, x[1, "k"]*0.967, 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 28)
+y2 <- prediction(median(x$b), median(x$k), 28)
+#y3 <- prediction(x[1, "b"]*0.85, x[1, "k"]*0.967, 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+View(y1)
+View(y2)
+y3 <- prediction(x[1, "b"]*0.7, x[1, "k"]*0.967, 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+#lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+#lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+y4 <- prediction(x[1, "b"], x[1, "k"]*1.351, 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+#lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+#lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+lines(y4$time, y4$infectious, type = "l", col = "pink", lty = 5)
+y4 <- prediction(x[1, "b"], x[1, "k"]*1.351, 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+#lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+#lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+lines(y4$time, y4$infectious, type = "l", col = "purple", lty = 5)
+y5 <- prediction(x[1, "b"]*0.6, x[1, "k"]*, 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+#lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+#lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+#lines(y4$time, y4$infectious, type = "l", col = "purple", lty = 5)
+lines(y5$time, y5$infectious, type = "l", col = "maroon", lty = 6)
+y5 <- prediction(x[1, "b"]*0.6, x[1, "k"], 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+#lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+#lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+#lines(y4$time, y4$infectious, type = "l", col = "purple", lty = 5)
+lines(y5$time, y5$infectious, type = "l", col = "maroon", lty = 6)
+y5 <- prediction(x[1, "b"]*0.6, x[1, "k"], 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+#lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+#lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+#lines(y4$time, y4$infectious, type = "l", col = "purple", lty = 5)
+lines(y5$time, y5$infectious, type = "l", col = "orange", lty = 6)
+y5 <- prediction(x[1, "b"]*0.6, x[1, "k"], 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+#lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+#lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+#lines(y4$time, y4$infectious, type = "l", col = "purple", lty = 5)
+lines(y5$time, y5$infectious, type = "l", col = "yellow", lty = 6)
+y5 <- prediction(x[1, "b"]*0.6, x[1, "k"], 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+#lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+#lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+#lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+#lines(y4$time, y4$infectious, type = "l", col = "purple", lty = 5)
+lines(y5$time, y5$infectious, type = "l", col = "orange", lty = 6)
+y1 <- prediction(x[1, "b"], x[1, "k"], 28)
+y2 <- prediction(median(x$b), median(x$k), 28)
+y3 <- prediction(x[1, "b"]*0.7, x[1, "k"]*0.967, 28)
+#y4 <- prediction(x[1, "b"], x[1, "k"]*1.351, 28)
+#y5 <- prediction(x[1, "b"]*0.6, x[1, "k"], 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+y1 <- prediction(x[1, "b"], x[1, "k"], 28)
+y2 <- prediction(median(x$b), median(x$k), 28)
+y3 <- prediction(x[1, "b"]*0.7, x[1, "k"]*0.967, 28)
+y4 <- prediction(x[1, "b"], x[1, "k"]*1.351, 28)
+#y5 <- prediction(x[1, "b"]*0.6, x[1, "k"], 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+lines(y4$time, y4$infectious, type = "l", col = "purple", lty = 5)
+#lines(y5$time, y5$infectious, type = "l", col = "orange", lty = 6)
+y1 <- prediction(x[1, "b"], x[1, "k"], 28)
+y2 <- prediction(median(x$b), median(x$k), 28)
+y3 <- prediction(x[1, "b"]*0.7, x[1, "k"]*0.967, 28)
+y4 <- prediction(x[1, "b"], x[1, "k"]*1.351, 28)
+#y5 <- prediction(x[1, "b"]*0.6, x[1, "k"], 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+lines(y4$time, y4$infectious, type = "l", col = "purple", lty = 5)
+#lines(y5$time, y5$infectious, type = "l", col = "orange", lty = 6)
+y1 <- prediction(x[1, "b"], x[1, "k"], 28)
+y2 <- prediction(median(x$b), median(x$k), 28)
+y3 <- prediction(x[1, "b"]*0.7, x[1, "k"]*0.967, 28)
+y4 <- prediction(x[1, "b"], x[1, "k"]*1.351, 28)
+y5 <- prediction(x[1, "b"]*0.6, x[1, "k"], 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+lines(y4$time, y4$infectious, type = "l", col = "purple", lty = 5)
+lines(y5$time, y5$infectious, type = "l", col = "orange", lty = 6)
+View(y3)
+y1 <- prediction(x[1, "b"], x[1, "k"], 28)
+y2 <- prediction(median(x$b), median(x$k), 28)
+y3 <- prediction(x[1, "b"]*0.7, x[1, "k"]*0.967, 28)
+#y4 <- prediction(x[1, "b"], x[1, "k"]*1.351, 28)
+#y5 <- prediction(x[1, "b"]*0.6, x[1, "k"], 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+#lines(y4$time, y4$infectious, type = "l", col = "purple", lty = 5)
+#lines(y5$time, y5$infectious, type = "l", col = "orange", lty = 6)
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 12)
+y2 <- prediction(median(x$b), median(x$k), 12)
+y3 <- prediction(x[1, "b"]*0.7, x[1, "k"]*0.967, 12)
+#y4 <- prediction(x[1, "b"], x[1, "k"]*1.351, 28)
+#y5 <- prediction(x[1, "b"]*0.6, x[1, "k"], 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+#lines(y4$time, y4$infectious, type = "l", col = "purple", lty = 5)
+#lines(y5$time, y5$infectious, type = "l", col = "orange", lty = 6)
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 12)
+y2 <- prediction(median(x$b), median(x$k), 12)
+y3 <- prediction(x[1, "b"]*0.7, x[1, "k"]*0.967, 12)
+#y4 <- prediction(x[1, "b"], x[1, "k"]*1.351, 28)
+#y5 <- prediction(x[1, "b"]*0.6, x[1, "k"], 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+#lines(y4$time, y4$infectious, type = "l", col = "purple", lty = 5)
+#lines(y5$time, y5$infectious, type = "l", col = "orange", lty = 6)
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 12)
+y2 <- prediction(median(x$b), median(x$k), 12)
+y3 <- prediction(x[1, "b"]*0.7, x[1, "k"]*0.967, 12)
+#y4 <- prediction(x[1, "b"], x[1, "k"]*1.351, 28)
+#y5 <- prediction(x[1, "b"]*0.6, x[1, "k"], 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+#lines(y4$time, y4$infectious, type = "l", col = "purple", lty = 5)
+#lines(y5$time, y5$infectious, type = "l", col = "orange", lty = 6)
+# from july 4
+y1 <- prediction(x[1, "b"], x[1, "k"], 12)
+y2 <- prediction(median(x$b), median(x$k), 12)
+y3 <- prediction(x[1, "b"]*0.7, x[1, "k"]*0.967, 12)
+#y4 <- prediction(x[1, "b"], x[1, "k"]*1.351, 28)
+#y5 <- prediction(x[1, "b"]*0.6, x[1, "k"], 28)
+plot(x$time, x$infectious, type = "l", col = "black", xlim = c(0, 200), ylim = c(0, 0.016))
+lines(y1$time, y1$infectious, type = "l", col = "green", lty = 2)
+lines(y2$time, y2$infectious, type = "l", col = "blue", lty = 3)
+lines(y3$time, y3$infectious, type = "l", col = "red", lty = 4)
+#lines(y4$time, y4$infectious, type = "l", col = "purple", lty = 5)
+#lines(y5$time, y5$infectious, type = "l", col = "orange", lty = 6)
+View(y2)
+View(y3)
+install.packages("shiny")
+library(base64enc)
+1 +1
+covid[is.na(covid$recovered), "recovered"] <- 0
+M <- 45
+N <- 23
+M + N
+covid[is.na(covid$recovered), "recovered"] <- 0
+prediction ()
+savehistory("/cloud/project/code.csv")
